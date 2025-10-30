@@ -36,9 +36,27 @@ services:
       - "8080:8080"
     volumes:
       - ./backend:/app:Z
+    env_file:
+      - ./backend/.env.dev
     depends_on:
       db:
         condition: service_healthy
+
+  # Frontend service using frontend/Dockerfile.dev
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: healthcare-crm-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env.dev
+    volumes:
+      - ./frontend:/app:Z
+      - /app/node_modules
+    depends_on:
+      - backend
 
 volumes:
   db_data:
