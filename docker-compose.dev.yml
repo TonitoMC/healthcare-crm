@@ -1,0 +1,44 @@
+# This Docker Compose file orchestrates the submodules in the repository.
+name: healthcare-crm-dev
+
+services:
+  # Database service using Postgres 18
+  db:
+    # Dev-only bypass to let Postgres access directories, prod will use Go-Migrate for DB management
+    user: root
+    env_file:
+      - .env.dev
+    image: postgres:18
+    container_name: healthcare-crm-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      # Volume for data persistence
+      - db_data:/var/lib/postgresql:Z
+
+      # SQL initialization scripts
+      - ./scripts:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d healthcare_crm_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend service using backend/Dockerfile.dev
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: healthcare-crm-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app:Z
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
