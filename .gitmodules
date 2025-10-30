@@ -1,0 +1,9 @@
+[submodule "backend"]
+	path = backend
+	url = git@github.com:tonitomc/healthcare-crm-api.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:tonitomc/healthcare-crm-frontend.git
+[submodule "db"]
+	path = db
+	url = git@github.com:tonitomc/healthcare-crm-db.git
