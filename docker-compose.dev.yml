@@ -18,7 +18,7 @@ services:
       - db_data:/var/lib/postgresql:Z
 
       # SQL initialization scripts
-      - ./scripts:/docker-entrypoint-initdb.d
+      - ./db/scripts:/docker-entrypoint-initdb.d:Z
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d healthcare_crm_dev"]
@@ -54,7 +54,6 @@ services:
       - ./frontend/.env.dev
     volumes:
       - ./frontend:/app:Z
-      - /app/node_modules
     depends_on:
       - backend
 
