@@ -54,7 +54,6 @@ services:
       - ./frontend/.env.dev
     volumes:
       - ./frontend:/app:Z
-      - /app/node_modules
     depends_on:
       - backend
 
