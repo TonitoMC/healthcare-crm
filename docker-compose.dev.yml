@@ -1,6 +1,5 @@
 # This Docker Compose file orchestrates the submodules in the repository.
-name: healthcare-crm-dev
-
+# (removed invalid top-level `name:` field to keep compatibility with docker-compose)
 services:
   # Database service using Postgres 18
   db:
@@ -11,8 +10,8 @@ services:
     image: postgres:18
     container_name: healthcare-crm-db
     restart: unless-stopped
-    ports:
-      - "5432:5432"
+    # Do not publish Postgres port to the host in dev to avoid conflicts with a local Postgres service.
+    # The backend connects to the `db` service internally via the Docker network (host: db, port: 5432).
     volumes:
       # Volume for data persistence
       - db_data:/var/lib/postgresql:Z
@@ -54,6 +53,8 @@ services:
       - ./frontend/.env.dev
     volumes:
       - ./frontend:/app:Z
+      # keep node_modules from the image to avoid host mount clobbering installed deps
+      - /app/node_modules
     depends_on:
       - backend
 
