@@ -53,8 +53,6 @@ services:
       - ./frontend/.env.dev
     volumes:
       - ./frontend:/app:Z
-      # keep node_modules from the image to avoid host mount clobbering installed deps
-      - /app/node_modules
     depends_on:
       - backend
 
