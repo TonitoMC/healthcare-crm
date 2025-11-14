@@ -45,7 +45,7 @@ jobs:
 
       # 🐳 Start containers (backend 8080, frontend 5173)
       - name: Build and start all containers
-        run: docker compose up -d --build
+        run: docker compose -f docker-compose.dev.yml up -d --build
 
       # 🩺 Wait for backend
       - name: Wait for backend to be healthy
