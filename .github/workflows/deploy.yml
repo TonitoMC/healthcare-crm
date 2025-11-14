@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build \
             -t ghcr.io/${{ secrets.GHCR_USERNAME }}/software-backend:latest \
-            -f software-backend/Dockerfile.prod \
+            -f software/Dockerfile.prod \
             software-backend
 
           docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/software-backend:latest
