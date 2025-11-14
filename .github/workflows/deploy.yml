@@ -19,27 +19,27 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build + Push Backend
         run: |
           docker build \
-            -t ghcr.io/${{ github.repository_owner }}/software-backend:latest \
+            -t ghcr.io/${{ secrets.GHCR_USERNAME }}/software-backend:latest \
             -f software-backend/Dockerfile.prod \
             software-backend
 
-          docker push ghcr.io/${{ github.repository_owner }}/software-backend:latest
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/software-backend:latest
 
       - name: Build + Push Frontend
         run: |
           docker build \
-            -f frontend/Dockerfile.prod \
-            -t ghcr.io/${{ github.repository_owner }}/software-frontend:latest \
+            -t ghcr.io/${{ secrets.GHCR_USERNAME }}/software-frontend:latest \
             --build-arg VITE_API_URL=/api \
+            -f frontend/Dockerfile.prod \
             frontend
 
-          docker push ghcr.io/${{ github.repository_owner }}/software-frontend:latest
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/software-frontend:latest
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -50,12 +50,9 @@ jobs:
           script: |
             cd /home/ubuntu/crm
 
-            echo "Stopping containers..."
             docker-compose -f docker-compose.prod.yml down
 
-            echo "Pulling latest images..."
-            docker pull ghcr.io/${{ github.repository_owner }}/software-backend:latest
-            docker pull ghcr.io/${{ github.repository_owner }}/software-frontend:latest
+            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/software-backend:latest
+            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/software-frontend:latest
 
-            echo "Starting stack..."
-            docker-compose -f docker-compose.prod.yml up -d --force-recreate
+            docker-compose -f docker-compose.prod.yml up -d --force-recreate --no-build
