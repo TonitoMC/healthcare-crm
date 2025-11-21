@@ -8,3 +8,28 @@ in order to clean up infrastructure, migrate to utilizing a component library & 
 ## Project Structure
 
 This project uses Github Submodules to manage Frontend, Backend & Database. In the future, Go-Migration will be used to manage database versions instead of individual SQL scripts.
+
+## How to Run (Development)
+
+### 1. Clone the repository (SSH)
+
+Clone via SSH
+```bash
+git clone git@github.com:TonitoMC/healthcare-crm.git
+cd healthcare-crm
+```
+
+Update Submodules
+```bash
+git submodule update --init --recursive
+```
+
+Run with Docker
+```bash
+docker compose -f dockerfile.dev.yml up --build
+```
+
+Open in browser
+```bash
+http://localhost:5173
+```
